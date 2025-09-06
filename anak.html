@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Matematika TK</title>
+<style>
+    body {
+        font-family: 'Comic Sans MS', cursive, sans-serif;
+        background: #FFFBCC;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
+    h1 {
+        color: #FF6F61;
+        text-align: center;
+    }
+    .quiz-container {
+        background: #FFF;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+        max-width: 500px;
+        width: 100%;
+        text-align: center;
+    }
+    .question {
+        font-size: 1.4em;
+        margin-bottom: 15px;
+    }
+    .options button {
+        display: block;
+        width: 100%;
+        margin: 8px 0;
+        padding: 12px;
+        font-size: 1.1em;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        background: #FFDA7B;
+        transition: 0.3s;
+    }
+    .options button:hover {
+        background: #FFB347;
+    }
+    .correct {
+        background-color: #8BC34A !important;
+        color: white;
+    }
+    .wrong {
+        background-color: #F44336 !important;
+        color: white;
+    }
+    #score {
+        font-size: 1.5em;
+        margin-top: 15px;
+        color: green;
+        animation: pop 0.5s;
+    }
+    @keyframes pop {
+        0% {transform: scale(0);}
+        100% {transform: scale(1);}
+    }
+</style>
+</head>
+<body>
+
+<h1>Quiz Matematika TK</h1>
+<div class="quiz-container">
+    <div id="quiz"></div>
+    <div id="score"></div>
+</div>
+
+<audio id="yaySound" src="https://www.soundjay.com/human/applause-01.mp3"></audio>
+
+<script>
+const quizData = [
+    {question: "1 + 1 = ?", options: ["1","2","3","4"], answer: "2"},
+    {question: "2 + 2 = ?", options: ["2","3","4","5"], answer: "4"},
+    {question: "3 + 1 = ?", options: ["2","4","5","3"], answer: "4"},
+    {question: "5 - 2 = ?", options: ["2","3","4","5"], answer: "3"},
+    {question: "4 - 1 = ?", options: ["3","4","2","1"], answer: "3"},
+    {question: "2 + 3 = ?", options: ["4","5","3","6"], answer: "5"},
+    {question: "1 + 4 = ?", options: ["4","5","3","2"], answer: "5"},
+    {question: "5 - 3 = ?", options: ["2","3","1","4"], answer: "2"},
+    {question: "3 + 2 = ?", options: ["4","5","3","6"], answer: "5"},
+    {question: "2 + 1 = ?", options: ["2","3","1","4"], answer: "3"},
+    {question: "4 - 2 = ?", options: ["1","2","3","4"], answer: "2"},
+    {question: "3 - 1 = ?", options: ["2","1","3","4"], answer: "2"},
+    {question: "1 + 2 = ?", options: ["2","3","4","1"], answer: "3"},
+    {question: "5 - 4 = ?", options: ["0","1","2","3"], answer: "1"},
+    {question: "2 + 2 = ?", options: ["3","4","5","2"], answer: "4"},
+    {question: "5 + 5 = ?", options: ["7","10","5","2"], answer: "10"},
+];
+
+let currentQuiz = 0;
+let score = 0;
+
+function loadQuiz() {
+    if(currentQuiz >= quizData.length){
+        document.getElementById('quiz').innerHTML = `<h2>🎉 Skor Kamu: ${score} / ${quizData.length} 🎉</h2>`;
+        return;
+    }
+
+    const quizEl = document.getElementById('quiz');
+    quizEl.innerHTML = `
+        <div class="question">${quizData[currentQuiz].question}</div>
+        <div class="options">
+            ${quizData[currentQuiz].options.map(opt => `<button onclick="selectAnswer(this,'${opt}')">${opt}</button>`).join('')}
+        </div>
+    `;
+}
+
+function selectAnswer(button, answer) {
+    const allButtons = document.querySelectorAll('.options button');
+    allButtons.forEach(btn => btn.disabled = true);
+
+    if(answer === quizData[currentQuiz].answer){
+        button.classList.add('correct');
+        score++;
+        document.getElementById('yaySound').play();
+    } else {
+        button.classList.add('wrong');
+        allButtons.forEach(btn => {
+            if(btn.textContent === quizData[currentQuiz].answer){
+                btn.classList.add('correct');
+            }
+        });
+    }
+
+    setTimeout(() => {
+        currentQuiz++;
+        loadQuiz();
+    }, 1000);
+}
+
+loadQuiz();
+</script>
+
+</body>
+</html>
